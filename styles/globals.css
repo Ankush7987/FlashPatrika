@@ -1,0 +1,534 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Common variables */
+  --card-radius: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --font-family: 'Roboto', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-base: 14px;
+  --transition-duration: 300ms;
+}
+
+/* Light theme (default) */
+.light-theme {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 245, 245, 245;
+  --primary-color: #1a73e8;
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.05);
+  --text-primary: #000000;
+  --text-secondary: #5f6368;
+  --input-bg: #f1f3f4;
+}
+
+/* Dark theme */
+.dark-theme {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 18, 18, 18;
+  --primary-color: #4d8eea;
+  --card-shadow: 0 1px 2px rgba(255, 255, 255, 0.05);
+  --card-shadow-hover: 0 4px 6px rgba(255, 255, 255, 0.1);
+  --header-bg: #1e1e1e;
+  --card-bg: #2d2d2d;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --input-bg: #3d3d3d;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease;
+}
+
+/* Apply transitions to common elements */
+a, button, input, textarea, select,
+.card, .news-card, article, section, aside,
+.btn, .nav-link, .form-control {
+  transition: all var(--transition-duration) ease;
+}
+
+/* Theme-specific styling for common components */
+input, textarea, select {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.card, .news-card, article {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: var(--card-shadow);
+}
+
+/* Ensure text colors adapt to theme */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  transition: color var(--transition-duration) ease;
+}
+
+p, span, div {
+  transition: color var(--transition-duration) ease;
+}
+
+/* Sticky header styles */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: white;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+header.sticky {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation styles */
+header nav {
+  scrollbar-width: thin;
+  scrollbar-color: #dadce0 transparent;
+}
+
+header nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+header nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header nav::-webkit-scrollbar-thumb {
+  background-color: #dadce0;
+  border-radius: 20px;
+}
+
+/* Main content area */
+main {
+  flex: 1;
+  min-height: calc(100vh - 300px); /* Ensure content area has minimum height */
+}
+
+/* Footer styles */
+footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+footer a:hover {
+  color: var(--primary-color);
+}
+
+footer .container {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Responsive footer adjustments */
+@media (max-width: 640px) {
+  footer .grid {
+    row-gap: 2rem;
+  }
+  
+  footer h3 {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* AdSense spaces */
+.ads-space {
+  min-height: 90px;
+  background-color: #f1f3f4;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5f6368;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+}
+
+.ads-space.sidebar {
+  min-height: 600px;
+  width: 100%;
+}
+
+/* Skeleton loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Lazy loading for images */
+.lazy-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.lazy-image.loading {
+  opacity: 0;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* Main layout */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Top wrapper - contains Top Stories and Picks For You */
+.top-wrapper {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+
+.top-stories-section {
+  flex: 3;
+  width: 100%;
+}
+
+.sidebar-section {
+  flex: 1;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .top-wrapper {
+    flex-direction: row;
+  }
+  
+  .top-stories-section {
+    width: 60%;
+  }
+  
+  .sidebar-section {
+    width: 40%;
+    padding-left: var(--spacing-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .top-stories-section {
+    width: 75%;
+  }
+  
+  .sidebar-section {
+    width: 25%;
+  }
+}
+
+/* Main news feed */
+.main-news-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+/* Task:
+Redesign the Home Page of a news application to look like a professional, responsive news website layout.
+
+Objective:
+
+Top Stories and Sidebar ("Picks for You") should be properly arranged inside a common wrapper.
+
+Top Stories section must show 5 latest news.
+
+Sidebar ("Picks for You") must show news based on interest (dynamic from API).
+
+Below the Top Stories + Sidebar section, all Category-wise News (India, World, Tech, Business, Sports, etc.) should be shown, each inside their own cleanly separated section.
+
+Ensure the layout is properly structured, neat, clean, and responsive for all devices (desktop, tablet, mobile).
+
+Use flexbox or CSS grid for modern layout.
+
+Add error handling for broken images (onError event) to show a default image.
+
+UI should look like a professional news website (inspiration: BBC, CNN, NDTV style). */
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  color: #202124;
+}
+
+/* Featured news section */
+.featured-news {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+/* First story is larger (main story) */
+.featured-news > article:first-child {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-news > article:first-child .w-full.md\:w-1\/4 {
+  width: 100%;
+  height: 280px;
+}
+
+@media (min-width: 768px) {
+  .featured-news {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .featured-news > article:first-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+  
+  .featured-news > article:first-child .w-full.md\:w-1\/4 {
+    width: 50%;
+    height: auto;
+  }
+}
+
+/* Category sections */
+.category-sections {
+  width: 100%;
+}
+
+.category-section {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.category-section:last-child {
+  border-bottom: none;
+}
+
+.category-section h2 {
+  position: relative;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.category-news {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .category-news {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .category-news {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-news {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Make cards in category sections more compact */
+.category-news article {
+  margin-bottom: 0;
+}
+
+/* Picks for You sidebar */
+.sidebar {
+  width: 500px;
+  display: flex;
+  margin-right: 10px;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.sidebar-card {
+  display: flex;
+  padding: var(--spacing-sm);
+  border-radius: var(--card-radius);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--spacing-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.sidebar-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.sidebar-card-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: calc(var(--card-radius) - 2px);
+  margin-right: var(--spacing-sm);
+}
+
+.sidebar-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-card-title {
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+.jsx-b87a9f5265e26721 category-section{
+  padding: 100px;
+}
+
+.sidebar-card-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Your Topics section */
+.topics-section {
+  margin: var(--spacing-lg) 0;
+  padding-left: 0px;
+  margin-right: 0px;
+}
+
+.topics-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.topics-container {
+  display: flex;
+  overflow-x: auto;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  scrollbar-width: thin;
+  scrollbar-color: #dadce0 transparent;
+}
+
+.topics-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.topics-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.topics-container::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 20px;
+}
+
+.topic-card {
+  min-width: 140px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.topic-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--spacing-sm);
+  color: var(--primary-color);
+}
+
+.topic-name {
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.topic-headline {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    margin-top: var(--spacing-lg);
+  }
+  
+  .topic-card {
+    min-width: 120px;
+  }
+}

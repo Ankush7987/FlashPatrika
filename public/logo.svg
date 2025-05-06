@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40" fill="none">
+  <path d="M10 8H30V12H10V8Z" fill="#1a73e8"/>
+  <path d="M10 16H25V20H10V16Z" fill="#1a73e8"/>
+  <path d="M10 24H20V28H10V24Z" fill="#1a73e8"/>
+  <path d="M40 8H110V12H40V8Z" fill="#5f6368"/>
+  <path d="M40 16H100V20H40V16Z" fill="#5f6368"/>
+  <path d="M40 24H90V28H40V24Z" fill="#5f6368"/>
+</svg>
