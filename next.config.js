@@ -2,7 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['s.espncdn.com', 'localhost', 'news-api-9x6t.onrender.com'],
+    domains: [
+      's.espncdn.com', 
+      'localhost', 
+      'news-api-9x6t.onrender.com',
+      'render.com',
+      'img.icons8.com'
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -16,8 +22,12 @@ const nextConfig = {
   env: {
     // Default API URL will be overridden by our dynamic logic in api.js
     API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:3000/api',
-    // Make render.com API URL available
+    // Production API URL for Render
     NEXT_PUBLIC_RENDER_API_URL: 'https://news-api-9x6t.onrender.com/api',
+    // Flag to indicate if we're running in production
+    NEXT_PUBLIC_IS_PRODUCTION: process.env.NODE_ENV === 'production' ? 'true' : 'false',
+    // Vercel-specific environment detection
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV || 'development',
   },
   // Add CORS headers in development to prevent issues
   async headers() {
@@ -33,6 +43,17 @@ const nextConfig = {
         ],
       },
     ];
+  },
+  // Ensure API requests work with render.com backend
+  async rewrites() {
+    return process.env.NODE_ENV === 'development' 
+      ? [] // No rewrites in development
+      : [
+          {
+            source: '/api/:path*',
+            destination: 'https://news-api-9x6t.onrender.com/api/:path*',
+          },
+        ];
   },
 }
 

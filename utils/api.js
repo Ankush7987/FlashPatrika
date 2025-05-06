@@ -24,11 +24,20 @@ export const getApiBaseUrl = () => {
       return 'http://localhost:3000/api';
     }
     
-    // Production deployment
+    // Vercel domain check
+    if (hostname.includes('vercel.app')) {
+      return 'https://news-api-9x6t.onrender.com/api';
+    }
+    
+    // Production deployment (default)
     return 'https://news-api-9x6t.onrender.com/api';
   }
   
   // Server-side rendering or fallback
+  if (process.env.VERCEL_URL) {
+    return 'https://news-api-9x6t.onrender.com/api';
+  }
+  
   return process.env.API_BASE_URL || 'http://localhost:3000/api';
 };
 
@@ -37,13 +46,48 @@ const API_BASE_URL = getApiBaseUrl();
 
 console.log('Using API base URL:', API_BASE_URL);
 
-// Set a timeout for API requests
+// Set a timeout for API requests with CORS configuration
 const axiosInstance = axios.create({
-  timeout: 10000, // 10 seconds timeout
+  timeout: 15000, // 15 seconds timeout (increased for production)
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  withCredentials: false // Set to true if your API requires credentials/cookies
 });
+
+// Add request interceptor for debugging
+axiosInstance.interceptors.request.use(
+  config => {
+    console.log(`Making request to: ${config.url}`);
+    return config;
+  },
+  error => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for better error handling
+axiosInstance.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // outside of the range of 2xx
+      console.error('Response error:', error.response.status, error.response.data);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received:', error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error('Request setup error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Fetch news with optional category filter
