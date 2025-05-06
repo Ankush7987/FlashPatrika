@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Import our API base URL helper function
+import { getApiBaseUrl } from '../../utils/api'; 
+
 /**
  * API route for handling contact form submissions
  * This forwards the request to the backend API
@@ -22,11 +25,30 @@ export default async function handler(req, res) {
       });
     }
 
+    // Get the dynamic API base URL
+    let apiBaseUrl;
+    
+    // Server-side environment has different hostname detection
+    if (process.env.VERCEL_URL) {
+      // Running on Vercel
+      apiBaseUrl = 'https://news-api-9x6t.onrender.com/api';
+    } else if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+      // Use environment variable if available
+      apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    } else {
+      // Default to localhost in development
+      apiBaseUrl = 'http://localhost:3000/api';
+    }
+    
+    console.log('Contact form using API base URL:', apiBaseUrl);
+    
+    // Ensure URL doesn't have duplicate /api
+    const contactUrl = apiBaseUrl.endsWith('/api') 
+      ? `${apiBaseUrl}/contact` 
+      : `${apiBaseUrl}/api/contact`;
+    
     // Forward the request to the backend API
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
-    // Remove '/api' from the end if it exists to avoid duplication
-    const baseUrl = apiBaseUrl.endsWith('/api') ? apiBaseUrl : `${apiBaseUrl}/api`;
-    const response = await axios.post(`${baseUrl}/contact`, req.body);
+    const response = await axios.post(contactUrl, req.body);
 
     // Return the response from the backend
     return res.status(response.status).json(response.data);

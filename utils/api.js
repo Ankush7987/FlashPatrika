@@ -1,11 +1,48 @@
 import axios from 'axios';
 import { mockArticles, generateMockArticles, generateMockSourceArticles } from './mockData';
 
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000/api';
+// Dynamic API base URL configuration
+export const getApiBaseUrl = () => {
+  // First priority: Use environment variable if available
+  if (process.env.REACT_APP_API_BASE_URL) {
+    return process.env.REACT_APP_API_BASE_URL;
+  }
+  
+  // Second priority: Use Next.js environment variable
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+
+  // Third priority: Dynamic detection based on hostname
+  const isClient = typeof window !== 'undefined';
+  
+  if (isClient) {
+    const hostname = window.location.hostname;
+    
+    // Local development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:3000/api';
+    }
+    
+    // Production deployment
+    return 'https://news-api-9x6t.onrender.com/api';
+  }
+  
+  // Server-side rendering or fallback
+  return process.env.API_BASE_URL || 'http://localhost:3000/api';
+};
+
+// Get the appropriate API base URL
+const API_BASE_URL = getApiBaseUrl();
+
+console.log('Using API base URL:', API_BASE_URL);
 
 // Set a timeout for API requests
 const axiosInstance = axios.create({
   timeout: 10000, // 10 seconds timeout
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 /**

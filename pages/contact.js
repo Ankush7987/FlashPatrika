@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../components/layout/Layout';
+import { getApiBaseUrl } from '../utils/api';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function ContactPage() {
     setMessage('');
     
     try {
+      // Always use the Next.js API route which handles the dynamic API URL for us
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
