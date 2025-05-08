@@ -63,16 +63,16 @@
 
 /* Enhanced news card styling */
 .news-card {
-  background-color: var(--card-background);
+  /* background-color: var(--card-background); */
   border-radius: var(--card-border-radius);
   box-shadow: var(--card-shadow);
   overflow: hidden;
   transition: background-color var(--transition-speed);
 }
 
-.news-card:hover {
+/* .news-card:hover {
   background-color: var(--card-hover-background);
-}
+} */
 
 /* Your Topics section improvements */
 .your-topics {

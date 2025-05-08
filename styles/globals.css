@@ -21,7 +21,7 @@
   --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.1);
   --header-bg: #ffffff;
-  --card-bg: #ffffff;
+  --card-bg: #f8f9fa;
   --border-color: rgba(0, 0, 0, 0.05);
   --text-primary: #000000;
   --text-secondary: #5f6368;
@@ -58,7 +58,7 @@ body {
 /* Apply transitions to common elements */
 a, button, input, textarea, select,
 .card, .news-card, article, section, aside,
-.btn, .nav-link, .form-control {
+.btn, .nav-link, .form-control, .sidebar-card, .topic-card, .featured-article, .remaining-articles > div {
   transition: all var(--transition-duration) ease;
 }
 
@@ -69,10 +69,11 @@ input, textarea, select {
   border-color: var(--border-color);
 }
 
-.card, .news-card, article {
+.card, .news-card, article, .sidebar-card, .topic-card, .featured-article, .featured-article-skeleton, .remaining-articles > div {
   background-color: var(--card-bg);
   color: var(--text-primary);
   box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-color);
 }
 
 /* Ensure text colors adapt to theme */
@@ -491,7 +492,7 @@ UI should look like a professional news website (inspiration: BBC, CNN, NDTV sty
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color var(--transition-duration) ease;
 }
 
 .topic-card:hover {

@@ -52,10 +52,10 @@ const HomeLayout = ({ children, categories = [] }) => {
           {children}
         </div>
         
-        {/* Sidebar with Picks for You and Source News */}
+        {/* Sidebar with Picks for You and Source News - Source News is hidden on mobile and shown at bottom */}
         <div className="sidebar-section">
           <PicksForYou />
-          <div className="mt-4 sm:mt-6">
+          <div className="mt-4 sm:mt-6 hidden md:block">
             <SourceNewsList title="News Sources" limit={5} />
           </div>
         </div>
@@ -73,16 +73,26 @@ const HomeLayout = ({ children, categories = [] }) => {
               {/* Category news content */}
               <div className="category-content">
                 <h2 className="category-title">{category.name}</h2>
-                <CategoryNewsList category={category} limit={5} />
+                <CategoryNewsList category={category} limit={2} />
+                <div className="read-more-container mt-3">
+                  <a href={`/${category.id}`} className="read-more-link">
+                    Read more <span className="read-more-arrow">→</span>
+                  </a>
+                </div>
               </div>
               
-              {/* Category sidebar with source news */}
-              <div className="category-sidebar">
+              {/* Category sidebar with source news - hidden on mobile */}
+              <div className="category-sidebar hidden md:block">
                 <SourceNewsList title={`${category.name} Sources`} limit={3} />
               </div>
             </div>
           </div>
         ))}
+      </div>
+      
+      {/* News Sources section - visible only on mobile, appears at the bottom */}
+      <div className="block md:hidden mt-8 mb-4">
+        <SourceNewsList title="News Sources" limit={5} />
       </div>
       
       </main>
@@ -187,6 +197,54 @@ const HomeLayout = ({ children, categories = [] }) => {
           }
         }
         
+        /* Read More link styling */
+        .read-more-container {
+          margin-top: var(--spacing-md);
+          text-align: right;
+        }
+        
+        .read-more-link {
+          display: inline-block;
+          font-size: 0.875rem;
+          color: var(--primary-color);
+          font-weight: 500;
+          text-decoration: none;
+          transition: all 0.2s ease-in-out;
+          position: relative;
+        }
+        
+        .read-more-arrow {
+          display: inline-block;
+          margin-left: 0.25rem;
+          transition: transform 0.2s ease-in-out;
+        }
+        
+        .read-more-link:hover {
+          color: var(--primary-color-dark);
+        }
+        
+        .read-more-link:hover .read-more-arrow {
+          transform: translateX(3px);
+        }
+        
+        .read-more-link:hover::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 1px;
+          bottom: -2px;
+          left: 0;
+          background-color: var(--primary-color-dark);
+          transform: scaleX(1);
+          transform-origin: bottom left;
+          transition: transform 0.3s ease-out;
+        }
+        
+        .read-more-link:focus {
+          outline: none;
+          text-decoration: underline;
+        }
+        
         .source-logo {
           width: 50px;
           height: 50px;
@@ -254,6 +312,15 @@ const HomeLayout = ({ children, categories = [] }) => {
         @media (min-width: 1024px) {
           .category-wrapper {
             padding: 0 3rem;
+          }
+        }
+        
+        /* Mobile-specific styles for news sources at bottom */
+        @media (max-width: 768px) {
+          .source-news-list {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
           }
         }
       `}</style>

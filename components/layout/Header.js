@@ -17,16 +17,7 @@ const categories = [
 const Header = () => {
   const router = useRouter();
   const currentPath = router.pathname;
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Implement search functionality here
-    console.log('Searching for:', searchQuery);
-    // You would typically redirect to a search results page
-    // router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-  };
-
+  
   const [isScrolled, setIsScrolled] = useState(false);
   
   useEffect(() => {
@@ -59,45 +50,16 @@ const Header = () => {
         <div className="flex items-center justify-between mb-2 sm:mb-3">
           <Link href="/" className="flex items-center space-x-2">
             <Image 
-              src="/logo.svg" 
-              alt="NewsFlow Logo" 
-              width={100} 
-              height={32} 
+              src={theme === 'dark' ? "/images/flashpatrika-logo-dark.svg" : "/images/flashpatrika-logo.svg"} 
+              alt="FlashPatrika News" 
+              width={220} 
+              height={60} 
               loading="eager"
-              className="h-8 sm:h-10 w-auto" 
+              className="h-10 sm:h-14 w-auto transition-all duration-500" 
+              style={{ filter: theme === 'dark' ? 'drop-shadow(0 0 2px rgba(255,255,255,0.1))' : 'none' }}
+              priority
             />
           </Link>
-          
-          {/* Search bar - hidden on mobile, visible on tablet and up */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center bg-[var(--input-bg)] rounded-full px-3 py-1 w-1/3 transition-all duration-300 hover:shadow-sm focus-within:shadow-sm">
-            <input 
-              type="text" 
-              placeholder="Search news..."
-              className="bg-transparent border-none outline-none flex-grow text-sm text-[var(--text-primary)] min-w-0"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button 
-              type="submit" 
-              className="ml-2 p-1 rounded-full hover:bg-[var(--border-color)] transition-colors"
-              aria-label="Search"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-          </form>
-          
-          {/* Mobile search button - visible only on mobile */}
-          <button 
-            className="md:hidden p-2 rounded-full bg-[var(--input-bg)] text-[var(--text-primary)] hover:bg-[var(--border-color)] transition-colors"
-            aria-label="Search"
-            onClick={() => console.log('Mobile search clicked')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
           
           {/* Theme toggle and mobile menu buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
@@ -122,7 +84,7 @@ const Header = () => {
               <li key={category.path}>
                 <Link 
                   href={category.path}
-                  className={`block text-sm font-medium transition-colors duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-[var(--primary-color)] bg-[var(--input-bg)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:bg-[var(--input-bg)]'}`}
+                  className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:translate-x-1'}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {category.name}
@@ -132,7 +94,7 @@ const Header = () => {
             <li>
               <Link 
                 href="/trending"
-                className={`block text-sm font-medium transition-colors duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-[var(--primary-color)] bg-[var(--input-bg)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:bg-[var(--input-bg)]'}`}
+                className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:translate-x-1'}`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span>Trending</span>
@@ -143,13 +105,13 @@ const Header = () => {
         </div>
         
         {/* Desktop Navigation - hidden on mobile */}
-        <nav className="hidden md:block overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border-color)] scrollbar-track-transparent pb-1 mt-3">
-          <ul className="flex space-x-6 whitespace-nowrap">
+        <nav className="hidden md:block overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border-color)] scrollbar-track-transparent pb-2 mt-4">
+          <ul className="flex justify-center space-x-8 whitespace-nowrap">
             {categories.map((category) => (
               <li key={category.path}>
                 <Link 
                   href={category.path}
-                  className={`text-sm font-medium transition-colors duration-300 py-2 px-1 ${currentPath === category.path ? 'text-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:border-b-2 hover:border-[var(--border-color)]'}`}
+                  className={`text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
                 >
                   {category.name}
                 </Link>
@@ -158,7 +120,7 @@ const Header = () => {
             <li>
               <Link 
                 href="/trending"
-                className={`text-sm font-medium transition-colors duration-300 py-2 px-1 flex items-center ${currentPath === '/trending' ? 'text-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:border-b-2 hover:border-[var(--border-color)]'}`}
+                className={`text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
               >
                 <span>Trending</span>
                 <span className="ml-1 bg-red-500 text-white text-xs px-1 rounded-sm">Hot</span>

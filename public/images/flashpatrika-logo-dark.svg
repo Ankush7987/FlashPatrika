@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Rectangle -->
+  <rect width="300" height="80" fill="#1e1e1e" rx="5" ry="5"/>
+  
+  <!-- Lightning Bolt Symbol -->
+  <path d="M50 15 L35 40 L50 40 L30 65 L35 45 L20 45 L40 15 Z" fill="#E63946" stroke="#FFFFFF" stroke-width="1.5"/>
+  
+  <!-- Text: Flash -->
+  <text x="70" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#FFFFFF">Flash</text>
+  
+  <!-- Text: Patrika -->
+  <text x="145" y="45" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#E63946">Patrika</text>
+  
+  <!-- Underline/News Ticker -->
+  <line x1="70" y1="50" x2="260" y2="50" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="1,1"/>
+  
+  <!-- Tagline -->
+  <text x="70" y="65" font-family="Arial, sans-serif" font-size="12" fill="#FFFFFF">Breaking News. Trusted Source.</text>
+</svg>

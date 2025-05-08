@@ -64,11 +64,11 @@ const YourTopics = ({ currentCategory = '' }) => {
           <Link 
             key={topic.id} 
             href={`/${topic.id}`}
-            className="topic-card bg-[var(--card-bg)] rounded-xl shadow-sm hover:shadow-md border border-[var(--border-color)] transition-all duration-300 p-3 sm:p-4 text-center hover:-translate-y-1 flex flex-col items-center justify-center cursor-pointer touch-manipulation"
+            className="topic-card rounded-xl shadow-sm hover:shadow-md border border-[var(--border-color)] transition-all duration-300 p-3 sm:p-4 text-center hover:-translate-y-1 flex flex-col items-center justify-center cursor-pointer touch-manipulation"
             aria-label={`View ${topic.name} news`}
           >
             <div className="topic-icon text-xl sm:text-2xl mb-1 sm:mb-2">{topic.icon}</div>
-            <h3 className="topic-name font-medium text-sm sm:text-base text-[var(--primary-color)]">{topic.name}</h3>
+            <h3 className="topic-name font-medium text-sm sm:text-base text-[var(--text-primary)]">{topic.name}</h3>
           </Link>
         ))}
       </div>
