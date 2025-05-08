@@ -52,7 +52,7 @@ const Footer = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </span>
-                <span className="ml-1 sm:ml-2">contact@newsflow.com</span>
+                <span className="ml-1 sm:ml-2">creercraftadvisors@gmail.com</span>
               </li>
               <li className="text-sm py-1" style={{ color: 'var(--text-secondary)' }}>
                 <Link href="/contact" className="hover:text-primary transition-colors block" style={{ color: 'var(--text-secondary)' }}>
