@@ -100,9 +100,10 @@ header.sticky {
 }
 
 /* Navigation styles */
+/* Enhanced header navigation styles */
 header nav {
   scrollbar-width: thin;
-  scrollbar-color: #dadce0 transparent;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 header nav::-webkit-scrollbar {
@@ -114,8 +115,49 @@ header nav::-webkit-scrollbar-track {
 }
 
 header nav::-webkit-scrollbar-thumb {
-  background-color: #dadce0;
+  background-color: var(--border-color);
   border-radius: 20px;
+}
+
+/* Improved category navigation */
+.nav-categories {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.nav-category {
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.nav-category:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments for navigation */
+@media (max-width: 768px) {
+  .nav-categories {
+    justify-content: flex-start;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .nav-category {
+    padding: 6px 10px;
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-categories {
+    justify-content: center;
+  }
+  
+  .nav-category {
+    padding: 8px 16px;
+  }
 }
 
 /* Main content area */

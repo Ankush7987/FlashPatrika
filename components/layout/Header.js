@@ -5,13 +5,18 @@ import Image from 'next/image';
 import { useTheme } from '../../context/ThemeContext';
 import ThemeToggleButton from '../ui/ThemeToggleButton';
 
+// Update the categories array to include all categories from YourTopics
 const categories = [
   { name: 'Home', path: '/' },
+  { name: 'India', path: '/india' },
   { name: 'World', path: '/world' },
   { name: 'Politics', path: '/politics' },
   { name: 'Business', path: '/business' },
   { name: 'Technology', path: '/tech' },
-  { name: 'Sports', path: '/sports' }
+  { name: 'Sports', path: '/sports' },
+  { name: 'Entertainment', path: '/entertainment' },
+  { name: 'Health', path: '/health' },
+  { name: 'Science', path: '/science' }
 ];
 
 const Header = () => {
@@ -78,55 +83,64 @@ const Header = () => {
         </div>
         
         {/* Mobile Menu - only visible when mobileMenuOpen is true */}
-        <div className={`md:hidden transition-all duration-300 overflow-hidden ${mobileMenuOpen ? 'max-h-64 opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
-          <ul className="flex flex-col space-y-3 py-2 px-1 bg-[var(--card-bg)] rounded-lg shadow-md border border-[var(--border-color)]">
-            {categories.map((category) => (
-              <li key={category.path}>
+        <div className={`md:hidden transition-all duration-300 overflow-hidden ${mobileMenuOpen ? 'max-h-[70vh] opacity-100 mb-3' : 'max-h-0 opacity-0'}`}>
+          <div className="max-h-[70vh] overflow-y-auto py-2 px-1 bg-[var(--card-bg)] rounded-lg shadow-md border border-[var(--border-color)]">
+            <ul className="flex flex-col space-y-1 py-1">
+              {categories.map((category) => (
+                <li key={category.path}>
+                  <Link 
+                    href={category.path}
+                    className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70'}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
                 <Link 
-                  href={category.path}
-                  className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:translate-x-1'}`}
+                  href="/trending"
+                  className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70'}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {category.name}
+                  <span>Trending</span>
+                  <span className="ml-1 bg-red-500 text-white text-xs px-1 rounded-sm">Hot</span>
                 </Link>
               </li>
-            ))}
-            <li>
-              <Link 
-                href="/trending"
-                className={`block text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:translate-x-1'}`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span>Trending</span>
-                <span className="ml-1 bg-red-500 text-white text-xs px-1 rounded-sm">Hot</span>
-              </Link>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
         
         {/* Desktop Navigation - hidden on mobile */}
-        <nav className="hidden md:block overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border-color)] scrollbar-track-transparent pb-2 mt-4">
-          <ul className="flex justify-center space-x-8 whitespace-nowrap">
-            {categories.map((category) => (
-              <li key={category.path}>
+        {/* Desktop Navigation - improved for better scrolling and responsive design */}
+        <nav className="hidden md:block overflow-x-auto pb-2 mt-3 relative">
+          <div className="flex items-center justify-center px-1 py-1 max-w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[var(--border-color)] scrollbar-track-transparent scroll-smooth snap-x nav-categories">
+            <ul className="flex flex-wrap md:flex-nowrap space-x-0.5 whitespace-nowrap px-1 mx-auto">
+              {categories.map((category) => (
+                <li key={category.path} className="snap-start flex-shrink-0 nav-category mb-1">
+                  <Link 
+                    href={category.path}
+                    className={`text-sm font-medium transition-all duration-300 py-1 px-1.5 rounded-md flex items-center ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+              <li className="snap-start flex-shrink-0 nav-category mb-1">
                 <Link 
-                  href={category.path}
-                  className={`text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md ${currentPath === category.path ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
+                  href="/trending"
+                  className={`text-sm font-medium transition-all duration-300 py-1 px-1.5 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
                 >
-                  {category.name}
+                  <span>Trending</span>
+                  <span className="ml-1 bg-red-500 text-white text-xs px-1 rounded-sm">Hot</span>
                 </Link>
               </li>
-            ))}
-            <li>
-              <Link 
-                href="/trending"
-                className={`text-sm font-medium transition-all duration-300 py-2 px-3 rounded-md flex items-center ${currentPath === '/trending' ? 'text-white font-bold bg-[var(--primary-color)] border-b-2 border-[var(--primary-color)]' : 'text-[var(--text-secondary)] hover:text-white hover:font-semibold hover:bg-[var(--primary-color)] hover:bg-opacity-70 hover:border-b-2 hover:border-[var(--primary-color)]'}`}
-              >
-                <span>Trending</span>
-                <span className="ml-1 bg-red-500 text-white text-xs px-1 rounded-sm">Hot</span>
-              </Link>
-            </li>
-          </ul>
+            </ul>
+          </div>
+          
+          {/* Scroll indicators for better UX */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[var(--header-bg)] to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[var(--header-bg)] to-transparent pointer-events-none"></div>
         </nav>
       </div>
     </header>
