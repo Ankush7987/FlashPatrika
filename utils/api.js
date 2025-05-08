@@ -26,16 +26,16 @@ export const getApiBaseUrl = () => {
     
     // Vercel domain check
     if (hostname.includes('vercel.app')) {
-      return 'https://news-api-9x6t.onrender.com/api';
+      return 'https://news-api-w60w.onrender.com/api';
     }
     
     // Production deployment (default)
-    return 'https://news-api-9x6t.onrender.com/api';
+    return 'https://news-api-w60w.onrender.com/api';
   }
   
   // Server-side rendering or fallback
   if (process.env.VERCEL_URL) {
-    return 'https://news-api-9x6t.onrender.com/api';
+    return 'https://news-api-w60w.onrender.com/api';
   }
   
   return process.env.API_BASE_URL || 'http://localhost:3000/api';
@@ -78,12 +78,25 @@ axiosInstance.interceptors.response.use(
       // The request was made and the server responded with a status code
       // outside of the range of 2xx
       console.error('Response error:', error.response.status, error.response.data);
+      
+      // Add user-friendly error message based on status code
+      if (error.response.status === 404) {
+        error.userMessage = 'The requested resource was not found. Please try again later.';
+      } else if (error.response.status === 403) {
+        error.userMessage = 'You do not have permission to access this resource.';
+      } else if (error.response.status >= 500) {
+        error.userMessage = 'The server encountered an error. Please try again later.';
+      } else {
+        error.userMessage = error.response.data.message || 'An unexpected error occurred.';
+      }
     } else if (error.request) {
       // The request was made but no response was received
       console.error('No response received:', error.request);
+      error.userMessage = 'Unable to connect to the news server. Please check your internet connection and try again.';
     } else {
       // Something happened in setting up the request that triggered an Error
       console.error('Request setup error:', error.message);
+      error.userMessage = 'Failed to send request. Please try again later.';
     }
     return Promise.reject(error);
   }
@@ -94,9 +107,10 @@ axiosInstance.interceptors.response.use(
  * @param {String|Array} category - Optional category filter
  * @param {Number} page - Page number for pagination
  * @param {Number} limit - Number of items per page
+ * @param {Number} retries - Number of retry attempts (default: 2)
  * @returns {Promise<Object>} - News data with pagination info
  */
-export const fetchNews = async (category = null, page = 1, limit = 50) => {
+export const fetchNews = async (category = null, page = 1, limit = 50, retries = 2) => {
   try {
     let url = `${API_BASE_URL}/news`;
     
@@ -118,7 +132,15 @@ export const fetchNews = async (category = null, page = 1, limit = 50) => {
       const response = await axiosInstance.get(`${url}?${params.toString()}`);
       return response.data;
     } catch (apiError) {
-      console.warn('API request failed, using mock data:', apiError.message);
+      // Retry logic - attempt to retry the request if we have retries left
+      if (retries > 0) {
+        console.log(`Retrying request (${retries} attempts left)...`);
+        // Wait for 1 second before retrying to avoid overwhelming the server
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return fetchNews(category, page, limit, retries - 1);
+      }
+      
+      console.warn('API request failed after retries, using mock data:', apiError.message);
       
       // Use mock data as fallback
       let mockResults = [];
@@ -142,13 +164,14 @@ export const fetchNews = async (category = null, page = 1, limit = 50) => {
         results: mockResults.slice(0, limit),
         total: mockResults.length,
         page,
-        limit
+        limit,
+        isMockData: true // Flag to indicate this is mock data
       };
     }
   } catch (error) {
     console.error('Error in fetchNews:', error);
-    // Return empty results instead of throwing
-    return { results: [], total: 0, page, limit };
+    // Propagate the error with user-friendly message
+    throw error;
   }
 };
 
@@ -156,9 +179,10 @@ export const fetchNews = async (category = null, page = 1, limit = 50) => {
  * Fetch latest news
  * @param {Number} page - Page number for pagination
  * @param {Number} limit - Number of items per page
+ * @param {Number} retries - Number of retry attempts (default: 2)
  * @returns {Promise<Object>} - Latest news data with pagination info
  */
-export const fetchLatestNews = async (page = 1, limit = 50) => {
+export const fetchLatestNews = async (page = 1, limit = 50, retries = 2) => {
   try {
     const url = `${API_BASE_URL}/news/latest`;
     const params = new URLSearchParams();
@@ -169,20 +193,29 @@ export const fetchLatestNews = async (page = 1, limit = 50) => {
       const response = await axiosInstance.get(`${url}?${params.toString()}`);
       return response.data;
     } catch (apiError) {
-      console.warn('Latest news API request failed, using mock data:', apiError.message);
+      // Retry logic - attempt to retry the request if we have retries left
+      if (retries > 0) {
+        console.log(`Retrying latest news request (${retries} attempts left)...`);
+        // Wait for 1 second before retrying to avoid overwhelming the server
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return fetchLatestNews(page, limit, retries - 1);
+      }
+      
+      console.warn('Latest news API request failed after retries, using mock data:', apiError.message);
       
       // Use mock data as fallback
       return {
         results: mockArticles.slice(0, limit),
         total: mockArticles.length,
         page,
-        limit
+        limit,
+        isMockData: true // Flag to indicate this is mock data
       };
     }
   } catch (error) {
     console.error('Error in fetchLatestNews:', error);
-    // Return empty results instead of throwing
-    return { results: [], total: 0, page, limit };
+    // Propagate the error with user-friendly message
+    throw error;
   }
 };
 

@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     // Server-side environment has different hostname detection
     if (process.env.VERCEL_URL) {
       // Running on Vercel
-      apiBaseUrl = 'https://news-api-9x6t.onrender.com/api';
+      apiBaseUrl = 'https://news-api-w60w.onrender.com/api';
     } else if (process.env.NEXT_PUBLIC_API_BASE_URL) {
       // Use environment variable if available
       apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;

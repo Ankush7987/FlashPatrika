@@ -63,7 +63,7 @@ const Header = () => {
               alt="NewsFlow Logo" 
               width={100} 
               height={32} 
-              priority 
+              loading="eager"
               className="h-8 sm:h-10 w-auto" 
             />
           </Link>

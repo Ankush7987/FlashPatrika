@@ -22,7 +22,8 @@ const TopStories = () => {
         setError(null);
       } catch (err) {
         console.error('Failed to fetch top stories:', err);
-        setError('Failed to load top stories');
+        // Use the user-friendly error message if available
+        setError(err.userMessage || 'Failed to load top stories. Please try again later.');
       } finally {
         setLoading(false);
       }
