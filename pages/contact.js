@@ -151,15 +151,15 @@ export default function ContactPage() {
           <h2 className="text-xl font-semibold mb-4">Other Ways to Connect</h2>
           <div className="space-y-3 text-[var(--text-secondary)]">
             <p>
-              <strong>Email:</strong> info@newsflow.example.com
+              <strong>Email:</strong> creercraftadvisors@gmail.com
             </p>
             <p>
               <strong>Follow us on social media:</strong>
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-primary hover:text-blue-700 transition-colors">Twitter</a>
-              <a href="#" className="text-primary hover:text-blue-700 transition-colors">Facebook</a>
-              <a href="#" className="text-primary hover:text-blue-700 transition-colors">Instagram</a>
+              <a href="https://x.com/FlashPatrika?t=5_9elioMuzvmfG2xESsgvw&s=09" className="text-primary hover:text-blue-700 transition-colors">X</a>
+              <a href="https://www.facebook.com/profile.php?id=100076567396855&mibextid=ZbWKwL" className="text-primary hover:text-blue-700 transition-colors">Facebook</a>
+              <a href="https://www.instagram.com/careercraft_advisors?igsh=Mnpyczd2NXkzemxz" className="text-primary hover:text-blue-700 transition-colors">Instagram</a>
             </div>
           </div>
         </section>
