@@ -33,6 +33,13 @@ const Layout = ({ children, title, description, ogImage }) => {
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        
+        {/* Performance optimizations */}
+        <meta name="theme-color" content="#ffffff" />
+        <link rel="preconnect" href="https://news-api-9x6t.onrender.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://news-api-9x6t.onrender.com" />
+        <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <meta httpEquiv="Cache-Control" content="public, max-age=3600, must-revalidate" />
       </Head>
 
       <Header />

@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Optimize image loading
   images: {
     domains: [
       's.espncdn.com', 
@@ -19,6 +20,48 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Optimize image quality and formats
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60, // Cache images for at least 60 seconds
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  // Enable compression for better performance
+  compress: true,
+  // Optimize production builds
+  swcMinify: true,
+  // Configure HTTP caching headers
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|png|webp|avif|gif)',
+        locale: false,
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
   env: {
     // Default API URL will be overridden by our dynamic logic in api.js

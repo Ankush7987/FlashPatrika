@@ -1,0 +1,90 @@
+/* Page Transition Loader Styles */
+
+.page-transition-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.page-transition-loader::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  animation: loading-animation 1.5s infinite;
+}
+
+.loader-spinner {
+  display: none; /* Hidden by default, can be enabled for specific pages */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
+  animation: spinner 0.8s linear infinite;
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .page-transition-loader {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .page-transition-loader::after {
+  background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+}
+
+[data-theme='dark'] .loader-spinner {
+  border: 3px solid rgba(96, 165, 250, 0.2);
+  border-top-color: #60a5fa;
+}
+
+/* Animation keyframes */
+@keyframes loading-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* For content-specific loaders */
+.content-loader {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-loader .loader-spinner {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
+}

@@ -1,6 +1,77 @@
 import axios from 'axios';
 import { mockArticles, generateMockArticles, generateMockSourceArticles } from './mockData';
 
+// Cache configuration
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+const CACHE_PREFIX = 'newsflow_cache_';
+
+// Cache utility functions
+const cacheUtils = {
+  // Get data from cache
+  get: (key) => {
+    if (typeof window === 'undefined') return null;
+    
+    try {
+      const cacheKey = CACHE_PREFIX + key;
+      const cachedData = localStorage.getItem(cacheKey);
+      
+      if (!cachedData) return null;
+      
+      const { data, timestamp } = JSON.parse(cachedData);
+      const isExpired = Date.now() - timestamp > CACHE_DURATION;
+      
+      return isExpired ? null : data;
+    } catch (error) {
+      console.error('Cache read error:', error);
+      return null;
+    }
+  },
+  
+  // Set data in cache
+  set: (key, data) => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const cacheKey = CACHE_PREFIX + key;
+      const cacheData = {
+        data,
+        timestamp: Date.now()
+      };
+      
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+    } catch (error) {
+      console.error('Cache write error:', error);
+    }
+  },
+  
+  // Clear specific cache entry
+  clear: (key) => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const cacheKey = CACHE_PREFIX + key;
+      localStorage.removeItem(cacheKey);
+    } catch (error) {
+      console.error('Cache clear error:', error);
+    }
+  },
+  
+  // Clear all cache entries
+  clearAll: () => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(CACHE_PREFIX)) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      console.error('Cache clearAll error:', error);
+    }
+  }
+};
+
 // Dynamic API base URL configuration
 export const getApiBaseUrl = () => {
   // First priority: Use environment variable if available
@@ -56,6 +127,12 @@ const axiosInstance = axios.create({
   withCredentials: false // Set to true if your API requires credentials/cookies
 });
 
+// Export cache utilities for manual cache management
+export const cacheAPI = {
+  clearCache: cacheUtils.clearAll,
+  clearCacheItem: cacheUtils.clear
+};
+
 // Add request interceptor for debugging
 axiosInstance.interceptors.request.use(
   config => {
@@ -68,9 +145,13 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add response interceptor for better error handling
+// Add response interceptor for better error handling and caching
 axiosInstance.interceptors.response.use(
   response => {
+    // Cache successful GET responses if they have a cacheKey in config
+    if (response.config.method === 'get' && response.config.cacheKey) {
+      cacheUtils.set(response.config.cacheKey, response.data);
+    }
     return response;
   },
   error => {
@@ -111,6 +192,16 @@ axiosInstance.interceptors.response.use(
  * @returns {Promise<Object>} - News data with pagination info
  */
 export const fetchNews = async (category = null, page = 1, limit = 50, retries = 2) => {
+  // Generate cache key based on parameters
+  const categoryKey = category ? (Array.isArray(category) ? category.join(',') : category) : 'all';
+  const cacheKey = `news_${categoryKey}_${page}_${limit}`;
+  
+  // Try to get from cache first
+  const cachedData = cacheUtils.get(cacheKey);
+  if (cachedData) {
+    console.log(`Using cached news for ${categoryKey}`);
+    return cachedData;
+  }
   try {
     let url = `${API_BASE_URL}/news`;
     
@@ -183,6 +274,15 @@ export const fetchNews = async (category = null, page = 1, limit = 50, retries =
  * @returns {Promise<Object>} - Latest news data with pagination info
  */
 export const fetchLatestNews = async (page = 1, limit = 50, retries = 2) => {
+  // Generate cache key based on parameters
+  const cacheKey = `latest_news_${page}_${limit}`;
+  
+  // Try to get from cache first
+  const cachedData = cacheUtils.get(cacheKey);
+  if (cachedData) {
+    console.log('Using cached latest news');
+    return cachedData;
+  }
   try {
     const url = `${API_BASE_URL}/news/latest`;
     const params = new URLSearchParams();
@@ -225,6 +325,15 @@ export const fetchLatestNews = async (page = 1, limit = 50, retries = 2) => {
  * @returns {Promise<Object>} - News article data
  */
 export const fetchNewsById = async (id) => {
+  // Generate cache key based on article ID
+  const cacheKey = `article_${id}`;
+  
+  // Try to get from cache first
+  const cachedData = cacheUtils.get(cacheKey);
+  if (cachedData) {
+    console.log(`Using cached article ${id}`);
+    return cachedData;
+  }
   try {
     const url = `${API_BASE_URL}/news/${id}`;
     
@@ -268,6 +377,15 @@ export const fetchNewsById = async (id) => {
  * @returns {Promise<Object>} - Source news data with pagination info
  */
 export const fetchNewsBySource = async (source, page = 1, limit = 20) => {
+  // Generate cache key based on source and pagination
+  const cacheKey = `source_${source.toLowerCase()}_${page}_${limit}`;
+  
+  // Try to get from cache first
+  const cachedData = cacheUtils.get(cacheKey);
+  if (cachedData) {
+    console.log(`Using cached news for source ${source}`);
+    return cachedData;
+  }
   try {
     // Try to fetch from API first
     try {
